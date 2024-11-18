@@ -1,19 +1,24 @@
 package com.example.paperplane.domain.idea.entity;
 
-import com.example.paperplane.domain.category.entity.CategoryName;
 import com.example.paperplane.domain.user.entity.User;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "ideas")
+@NoArgsConstructor
 public class Idea {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idea_id")
     private Long ideaId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,7 +27,7 @@ public class Idea {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CategoryName category;
+    private Category category;
 
     @Column(nullable = false)
     private String title;
@@ -44,6 +49,15 @@ public class Idea {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public Idea(User user, String title, Category category, String description, String tags, int price) {
+        this.user = user;
+        this.title = title;
+        this.category = category;
+        this.description = description;
+        this.tags = tags;
+        this.price = price;
+    }
 
 //    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<Favorite> favorites;

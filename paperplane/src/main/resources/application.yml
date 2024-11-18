@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:mysql://paperplane-db.cz2y8guyqpbh.ap-northeast-2.rds.amazonaws.com:3306/paperplane_db
+    username: admin
+    password: paperplane54
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
