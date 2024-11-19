@@ -27,6 +27,8 @@ public enum Category {
         }
         throw new IllegalArgumentException("Unknown display name: " + displayName);
     }
+
+    // TODO: controller 에서 사용할때 카테고리 방식 변경
 }
 
 

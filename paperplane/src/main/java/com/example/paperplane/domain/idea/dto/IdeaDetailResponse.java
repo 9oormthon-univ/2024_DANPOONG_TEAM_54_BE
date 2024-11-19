@@ -12,6 +12,7 @@ public record IdeaDetailResponse(
         String tags,
         int price,
         String author,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String status
 ) {
 }
