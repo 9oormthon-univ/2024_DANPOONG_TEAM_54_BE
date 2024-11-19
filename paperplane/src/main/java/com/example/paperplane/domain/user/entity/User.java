@@ -22,9 +22,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String kakaoId;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
     @Column(nullable = false)
     private String username;
 
@@ -41,6 +38,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Idea> ideas;
+
+    private boolean firstLogin;
+
 
 }
 

@@ -7,6 +7,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
 
 kakao:
   client-id: e1ac4ad724cbaae65c5782f85de2b5a7

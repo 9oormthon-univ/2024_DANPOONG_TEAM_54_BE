@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RequiredArgsConstructor
 @RestController
 @Tag(name = "kakao", description = "kakao 로그인 관련 API")
@@ -23,13 +26,29 @@ public class KakaoController {
 
     @GetMapping("/kakao/login")
     @Operation(summary = "카카오 로그인")
-    public ResponseEntity<String> login(@RequestParam("code") String code) {
+    public ResponseEntity<Map<String, Object>> login(@RequestParam("code") String code) {
+        // Access Token 요청 및 저장
         String accessToken = kakaoService.getAccessToken(code);
         httpSession.setAttribute("token", accessToken);
 
+        // 사용자 정보 요청
         KakaoUserInfoResponse userInfo = kakaoService.getUserProfile(accessToken);
-        return ResponseEntity.ok("User Info: " + userInfo);
+
+        // 첫 로그인 여부 확인
+        boolean isFirstLogin = kakaoService.isFirstLogin(userInfo);
+        if (isFirstLogin) {
+            kakaoService.registerNewUser(userInfo);
+        }
+
+        // 응답 데이터 생성
+        Map<String, Object> response = new HashMap<>();
+        response.put("accessToken", accessToken);
+        response.put("isFirstLogin", isFirstLogin);
+        response.put("userInfo", userInfo);
+
+        return ResponseEntity.ok(response);
     }
+
 
     @Operation(summary = "카카오 로그아웃")
     @GetMapping("/kakao/logout")

@@ -1,9 +1,10 @@
 package com.example.paperplane.domain.auth.service;
 
 import com.example.paperplane.domain.auth.dto.KakaoUserInfoResponse;
+import com.example.paperplane.domain.user.entity.User;
+import com.example.paperplane.domain.user.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,13 +14,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 
-
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class KakaoService {
 
     private final WebClient webClient;
+    private final UserRepository userRepository;
 
     @Value("${kakao.client-id}")
     private String clientId;
@@ -38,7 +39,6 @@ public class KakaoService {
 
     @Value("${kakao.logout-uri}")
     private String logoutUri;
-
 
     public String getAccessToken(String code) {
         String response = webClient.post()
@@ -68,15 +68,38 @@ public class KakaoService {
         }
     }
 
-
     public KakaoUserInfoResponse getUserProfile(String accessToken) {
-        return webClient.get()
+        String response = webClient.get()
                 .uri(userInfoUri)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
-                .bodyToMono(KakaoUserInfoResponse.class)
+                .bodyToMono(String.class)
                 .block();
+
+        log.info("Kakao User Profile Response: {}", response);
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(response, KakaoUserInfoResponse.class);
+        } catch (Exception e) {
+            log.error("Failed to parse Kakao API response: {}", response, e);
+            throw new RuntimeException("Invalid user profile data received from Kakao API");
+        }
     }
+
+
+    public boolean isFirstLogin(KakaoUserInfoResponse userInfo) {
+        return userRepository.findByKakaoId(userInfo.id().toString()).isEmpty();
+    }
+
+    public void registerNewUser(KakaoUserInfoResponse userInfo) {
+        User newUser = new User();
+        newUser.setKakaoId(userInfo.id());
+        newUser.setUsername("User_" + userInfo.id());
+        newUser.setProfileImage(userInfo.kakaoAccount().profile().profileImageUrl());
+        userRepository.save(newUser);
+    }
+
 
     public String logout(String accessToken) {
         return webClient.post()
