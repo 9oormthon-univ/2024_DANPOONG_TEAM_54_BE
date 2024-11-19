@@ -37,13 +37,13 @@ public class IdeaService {
                 .collect(Collectors.toList());
     }
 
-    public Idea createIdea(IdeaRequest request, Long userId) {
+    public Idea createIdea(IdeaRequest request, Long userId, Category category) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Idea idea = new Idea(
                 user,
                 request.title(),
-                request.category(),
+                category,
                 request.description(),
                 request.tags(),
                 request.price()

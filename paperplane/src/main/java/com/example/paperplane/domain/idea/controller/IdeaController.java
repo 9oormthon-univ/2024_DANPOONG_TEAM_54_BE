@@ -30,20 +30,24 @@ public class IdeaController {
 
     @GetMapping("/category")
     @Operation(summary = "카테고리별 아이디어 조회")
-    public ResponseEntity<List<IdeaCatalogResponse>> getIdeasByCategory(@RequestParam Category category) {
-        List<IdeaCatalogResponse> ideas = ideaService.getIdeasByCategory(category);
+    public ResponseEntity<List<IdeaCatalogResponse>> getIdeasByCategory(@RequestParam String category) {
+        Category enumCategory = Category.fromDisplayName(category);
+        List<IdeaCatalogResponse> ideas = ideaService.getIdeasByCategory(enumCategory);
         return ResponseEntity.ok(ideas);
     }
 
     @PostMapping("/create")
     @Operation(summary = "아이디어 작성")
     public Idea createIdea(@RequestBody IdeaRequest request, @RequestParam Long userId) {
-        return ideaService.createIdea(request, userId);
+        System.out.println("Received request: " + request);
+        Category category = Category.fromDisplayName(request.categoryDisplayName()); // 변환
+        return ideaService.createIdea(request, userId, category);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "아이디어 상세 조회")
     public IdeaDetailResponse getIdeaDetail(@PathVariable Long id, @RequestParam Long userId) {
+
         return ideaService.getIdeaDetail(id, userId);
     }
 

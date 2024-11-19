@@ -4,7 +4,7 @@ import com.example.paperplane.domain.idea.entity.Category;
 
 public record IdeaRequest(
         String title,
-        Category category,
+        String categoryDisplayName,
         String description,
         String tags,
         int price
