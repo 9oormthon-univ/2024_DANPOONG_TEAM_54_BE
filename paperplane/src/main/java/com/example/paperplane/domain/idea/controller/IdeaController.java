@@ -43,8 +43,8 @@ public class IdeaController {
 
     @GetMapping("/{id}")
     @Operation(summary = "아이디어 상세 조회")
-    public IdeaDetailResponse getIdeaDetail(@PathVariable Long id) {
-        return ideaService.getIdeaDetail(id);
+    public IdeaDetailResponse getIdeaDetail(@PathVariable Long id, @RequestParam Long userId) {
+        return ideaService.getIdeaDetail(id, userId);
     }
 
 }

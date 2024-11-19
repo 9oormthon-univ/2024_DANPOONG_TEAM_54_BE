@@ -6,6 +6,7 @@ import com.example.paperplane.domain.idea.dto.IdeaRequest;
 import com.example.paperplane.domain.idea.entity.Category;
 import com.example.paperplane.domain.idea.entity.Idea;
 import com.example.paperplane.domain.idea.repository.IdeaRepository;
+import com.example.paperplane.domain.purchase.repository.PurchaseRepository;
 import com.example.paperplane.domain.user.entity.User;
 import com.example.paperplane.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class IdeaService {
     private final IdeaRepository ideaRepository;
     private final UserRepository userRepository;
+    private final PurchaseRepository purchaseRepository;
 
     public List<IdeaCatalogResponse> getIdeasByCategory(Category category) {
         return ideaRepository.findByCategory(category)
@@ -49,12 +51,23 @@ public class IdeaService {
         return ideaRepository.save(idea);
     }
 
-    @Transactional(readOnly = true)
-    public IdeaDetailResponse getIdeaDetail(Long id) {
+
+    public IdeaDetailResponse getIdeaDetail(Long id, Long userId) {
         Idea idea = ideaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("해당 아이디어를 찾을 수 없습니다: ID = " + id));
 
-        User user = idea.getUser();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다: ID = " + userId));
+
+        String status;
+        if (idea.getUser().getUserId().equals(userId)) {
+            status = "OWN"; // 본인 아이디어
+        } else if (purchaseRepository.existsByUser_UserIdAndIdea_IdeaId(userId, id)) {
+            status = "PURCHASED"; // 구매한 아이디어
+        } else {
+            status = "NOT_PURCHASED"; // 구매하지 않은 아이디어
+        }
+
         return new IdeaDetailResponse(
                 idea.getIdeaId(),
                 idea.getTitle(),
@@ -62,8 +75,9 @@ public class IdeaService {
                 idea.getDescription(),
                 idea.getTags(),
                 idea.getPrice(),
-                user.getUsername(),
-                idea.getCreatedAt()
+                idea.getUser().getUsername(),
+                idea.getCreatedAt(),
+                status
         );
     }
 }

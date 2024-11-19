@@ -21,7 +21,7 @@ public class Purchase {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User buyer;
+    private User user; // 산 사람
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idea_id", nullable = false)
@@ -33,8 +33,8 @@ public class Purchase {
     @Column(nullable = false)
     private LocalDateTime purchaseTime = LocalDateTime.now();
 
-    public Purchase(User buyer, Idea idea, int price) {
-        this.buyer = buyer;
+    public Purchase(User user, Idea idea, int price) {
+        this.user = user;
         this.idea = idea;
         this.price = price;
     }
