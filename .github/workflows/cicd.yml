@@ -26,8 +26,8 @@ jobs:
         run: |
           cd paperplane
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/paperplane:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/paperplane:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/paperplane-prod:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/paperplane-prod:latest
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
