@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  app-blue:
+    image: 9one/paperplane-prod:latest
+    container_name: app-blue
+    environment:
+      - CONTAINER_COLOR=blue
+    ports:
+      - "8080:8080"
+
+  app-green:
+    image: 9one/paperplane-prod:latest
+    container_name: app-green
+    environment:
+      - CONTAINER_COLOR=green
+    ports:
+      - "8081:8080"
