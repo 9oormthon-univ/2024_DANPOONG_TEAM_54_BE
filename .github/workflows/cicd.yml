@@ -24,7 +24,7 @@ jobs:
 
       - name: Docker Build & Push
         run: |
-          cd ..
+          cd paperplane
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/paperplane:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/paperplane:latest
