@@ -35,6 +35,12 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
           script: |
-            chmod +x /home/ubuntu/api/2024_DANPOONG_TEAM_54_BE/deploy.sh
-            /home/ubuntu/api/2024_DANPOONG_TEAM_54_BE/deploy.sh
+            echo "Pulling the latest Docker image on EC2"
+            docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+            docker pull ${{ secrets.DOCKER_USERNAME }}/paperplane-prod:latest
+            echo "Stopping existing container (if running)"
+            docker stop paperplane || true && docker rm paperplane || true
+            echo "Starting a new container"
+            docker run -d --name paperplane -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/paperplane-prod:latest
