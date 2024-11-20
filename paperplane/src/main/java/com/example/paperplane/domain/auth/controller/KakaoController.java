@@ -40,11 +40,14 @@ public class KakaoController {
             kakaoService.registerNewUser(userInfo);
         }
 
+        Long userId = kakaoService.getUserId(userInfo);
+
         // 응답 데이터 생성
         Map<String, Object> response = new HashMap<>();
         response.put("accessToken", accessToken);
         response.put("isFirstLogin", isFirstLogin);
         response.put("userInfo", userInfo);
+        response.put("userId", userId);
 
         return ResponseEntity.ok(response);
     }

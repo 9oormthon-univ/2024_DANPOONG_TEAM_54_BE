@@ -116,4 +116,11 @@ public class KakaoService {
                 + "&redirect_uri=" + redirectUri
                 + "&response_type=code";
     }
+
+    public Long getUserId(KakaoUserInfoResponse userInfo) {
+        return userRepository.findByKakaoId(userInfo.id().toString())
+                .map(User::getUserId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 }
