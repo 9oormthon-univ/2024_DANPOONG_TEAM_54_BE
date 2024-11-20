@@ -18,7 +18,9 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: |
+          cd paperplane 
+          ./gradlew build -x test
 
       - name: Docker Build & Push
         run: |
