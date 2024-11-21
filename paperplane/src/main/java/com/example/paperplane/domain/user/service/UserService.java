@@ -1,5 +1,7 @@
 package com.example.paperplane.domain.user.service;
 
+import com.example.paperplane.domain.user.dto.KakaoUserRequest;
+import com.example.paperplane.domain.user.dto.UserIdResponse;
 import com.example.paperplane.domain.user.dto.UserProfileResponse;
 import com.example.paperplane.domain.user.entity.User;
 import com.example.paperplane.domain.user.repository.UserRepository;
@@ -28,6 +30,25 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: ID = " + userId));
         return new UserProfileResponse(user.getUsername(), user.getProfileImage(), user.getPoints());
+    }
+
+    public UserIdResponse registerOrGetUser(KakaoUserRequest request) {
+        return userRepository.findByKakaoId(request.kakaoId())
+                .map(user -> {
+                    if (user.isFirstLogin()) {
+                        user.setFirstLogin(false);
+                    }
+                    return new UserIdResponse(user.getUserId(), user.isFirstLogin());
+                })
+                .orElseGet(() -> {
+                    User newUser = new User();
+                    newUser.setKakaoId(request.kakaoId());
+                    newUser.setProfileImage(request.profileImage());
+                    newUser.setUsername("User_" + request.kakaoId());
+                    newUser.setFirstLogin(true);
+                    userRepository.save(newUser);
+                    return new UserIdResponse(newUser.getUserId(), true);
+                });
     }
 
 }

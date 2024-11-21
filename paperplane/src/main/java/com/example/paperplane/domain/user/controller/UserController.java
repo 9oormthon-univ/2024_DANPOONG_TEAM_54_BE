@@ -1,5 +1,7 @@
 package com.example.paperplane.domain.user.controller;
 
+import com.example.paperplane.domain.user.dto.KakaoUserRequest;
+import com.example.paperplane.domain.user.dto.UserIdResponse;
 import com.example.paperplane.domain.user.dto.UserProfileResponse;
 import com.example.paperplane.domain.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,5 +32,13 @@ public class UserController {
     public UserProfileResponse getUserProfile(@PathVariable Long id) {
         return userService.getUserProfile(id);
     }
+
+    @PostMapping("/kakao")
+    @Operation(summary = "Kakao 사용자 등록 또는 기존 사용자 가져오기")
+    public ResponseEntity<UserIdResponse> registerOrGetUser(@RequestBody KakaoUserRequest request) {
+        UserIdResponse response = userService.registerOrGetUser(request);
+        return ResponseEntity.ok(response);
+    }
+
 }
 
