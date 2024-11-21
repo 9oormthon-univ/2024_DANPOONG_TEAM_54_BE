@@ -13,7 +13,7 @@ spring:
 
 kakao:
   client-id: e1ac4ad724cbaae65c5782f85de2b5a7
-  redirect-uri: http://localhost:8080/login-callback
+  redirect-uri: http://54.180.136.222:8080/login-callback
   authorize-uri: https://kauth.kakao.com/oauth/authorize
   token-uri: https://kauth.kakao.com/oauth/token
   kakao-api-host: https://kapi.kakao.com
