@@ -37,6 +37,14 @@ public class IdeaService {
                 .collect(Collectors.toList());
     }
 
+    public List<IdeaCatalogResponse> getIdeasByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(user -> ideaRepository.findByUser(user).stream()
+                        .map(IdeaCatalogResponse::new)
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new IllegalArgumentException("User not found: username = " + username));
+    }
+
     public Idea createIdea(IdeaRequest request, Long userId, Category category) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));

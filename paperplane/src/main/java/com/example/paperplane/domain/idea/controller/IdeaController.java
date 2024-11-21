@@ -51,5 +51,10 @@ public class IdeaController {
         return ideaService.getIdeaDetail(id, userId);
     }
 
+    @GetMapping("/user/{username}")
+    @Operation(summary = "특정 사용자의 아이디어 조회")
+    public List<IdeaCatalogResponse> getIdeasByUsername(@PathVariable String username) {
+        return ideaService.getIdeasByUsername(username);
+    }
 }
 
