@@ -88,5 +88,10 @@ public class IdeaService {
                 status
         );
     }
+    public List<IdeaCatalogResponse> searchIdeas(String keyword) {
+        return ideaRepository.searchByKeyword(keyword).stream()
+                .map(IdeaCatalogResponse::new)
+                .collect(Collectors.toList());
+    }
 }
 

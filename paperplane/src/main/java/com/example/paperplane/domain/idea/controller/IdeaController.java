@@ -29,7 +29,7 @@ public class IdeaController {
     }
 
     @GetMapping("/category")
-    @Operation(summary = "카테고리별 아이디어 조회")
+    @Operation(summary = "카테고리별 아이디어 조회", description = "카테고리 한글로 입력하면 됩니다.")
     public ResponseEntity<List<IdeaCatalogResponse>> getIdeasByCategory(@RequestParam String category) {
         Category enumCategory = Category.fromDisplayName(category);
         List<IdeaCatalogResponse> ideas = ideaService.getIdeasByCategory(enumCategory);
@@ -45,7 +45,7 @@ public class IdeaController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "아이디어 상세 조회")
+    @Operation(summary = "아이디어 상세 조회", description = "OWN - 본인 아이디어  PURCHASED - 이미 구매한 아이디어  NOT_PURCHASED - 구매하지 않은 아이디어")
     public IdeaDetailResponse getIdeaDetail(@PathVariable Long id, @RequestParam Long userId) {
 
         return ideaService.getIdeaDetail(id, userId);
@@ -55,6 +55,12 @@ public class IdeaController {
     @Operation(summary = "특정 사용자의 아이디어 조회")
     public List<IdeaCatalogResponse> getIdeasByUsername(@PathVariable String username) {
         return ideaService.getIdeasByUsername(username);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "아이디어 검색", description = "키워드로 아이디어를 검색합니다 (제목 또는 태그 기준).")
+    public List<IdeaCatalogResponse> searchIdeas(@RequestParam String keyword) {
+        return ideaService.searchIdeas(keyword);
     }
 }
 

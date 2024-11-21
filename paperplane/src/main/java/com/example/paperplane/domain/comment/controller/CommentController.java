@@ -27,7 +27,17 @@ public class CommentController {
     }
 
     @PostMapping
-    @Operation(summary = "댓글 작성")
+    @Operation(summary = "댓글 작성" , description = "첫 댓글 작성일 시 \n" +
+            "\n" +
+            "request에\n" +
+            "\n" +
+            " `parentId: null` 또는 parentId 아예 생략\n" +
+            "\n" +
+            "두번째 이상 대댓글 작성 시\n" +
+            "\n" +
+            "request에\n" +
+            "\n" +
+            "`parentId` : 윗 댓글의 Id")
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable Long ideaId,
             @RequestParam Long userId,
