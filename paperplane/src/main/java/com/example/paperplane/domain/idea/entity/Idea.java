@@ -61,6 +61,9 @@ public class Idea {
         this.price = price;
     }
 
+    @Column
+    private String fileUrl;
+
 //    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    private List<Favorite> favorites;
 //

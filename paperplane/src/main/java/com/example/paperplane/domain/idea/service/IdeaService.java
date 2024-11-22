@@ -1,5 +1,6 @@
 package com.example.paperplane.domain.idea.service;
 
+import com.example.paperplane.domain.file.service.S3Service;
 import com.example.paperplane.domain.idea.dto.IdeaCatalogResponse;
 import com.example.paperplane.domain.idea.dto.IdeaDetailResponse;
 import com.example.paperplane.domain.idea.dto.IdeaRequest;
@@ -12,6 +13,7 @@ import com.example.paperplane.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +25,7 @@ public class IdeaService {
     private final IdeaRepository ideaRepository;
     private final UserRepository userRepository;
     private final PurchaseRepository purchaseRepository;
+    private final S3Service s3Service;
 
     public List<IdeaCatalogResponse> getIdeasByCategory(Category category) {
         return ideaRepository.findByCategory(category)
@@ -45,7 +48,7 @@ public class IdeaService {
                 .orElseThrow(() -> new IllegalArgumentException("User not found: username = " + username));
     }
 
-    public Idea createIdea(IdeaRequest request, Long userId, Category category) {
+    public Idea createIdea(IdeaRequest request, Long userId, MultipartFile file, Category category) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Idea idea = new Idea(
@@ -56,6 +59,11 @@ public class IdeaService {
                 request.tags(),
                 request.price()
         );
+
+        if (file != null && !file.isEmpty()) {
+            String fileUrl = s3Service.uploadFile(file);
+            idea.setFileUrl(fileUrl);
+        }
         return ideaRepository.save(idea);
     }
 
@@ -68,6 +76,7 @@ public class IdeaService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다: ID = " + userId));
 
         String status;
+        String fileDownloadUrl = null;
         if (idea.getUser().getUserId().equals(userId)) {
             status = "OWN"; // 본인 아이디어
         } else if (purchaseRepository.existsByUser_UserIdAndIdea_IdeaId(userId, id)) {
@@ -93,5 +102,19 @@ public class IdeaService {
                 .map(IdeaCatalogResponse::new)
                 .collect(Collectors.toList());
     }
+
+    public byte[] downloadIdeaFile(Long ideaId, Long userId) {
+        Idea idea = ideaRepository.findById(ideaId)
+                .orElseThrow(() -> new IllegalArgumentException("Idea not found: ID = " + ideaId));
+
+        if (!purchaseRepository.existsByUser_UserIdAndIdea_IdeaId(userId, ideaId) &&
+                !idea.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("User does not have access to this file");
+        }
+
+        return s3Service.downloadFile(idea.getFileUrl());
+    }
+
+
 }
 
