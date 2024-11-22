@@ -72,7 +72,7 @@ public class IdeaController {
     }
 
     @GetMapping("/{id}/download")
-    @Operation(summary = "아이디어 파일 다운로드")
+    @Operation(summary = "아이디어 파일 다운로드", description = "파일 다운로드 링크로 주어집니다.")
     public ResponseEntity<String> downloadFile(@PathVariable Long id, @RequestParam Long userId) {
         String file = ideaService.getIdeaFile(id, userId);
         return ResponseEntity.ok()
