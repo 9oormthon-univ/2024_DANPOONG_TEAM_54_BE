@@ -97,13 +97,14 @@ public class IdeaService {
                 status
         );
     }
+
     public List<IdeaCatalogResponse> searchIdeas(String keyword) {
         return ideaRepository.searchByKeyword(keyword).stream()
                 .map(IdeaCatalogResponse::new)
                 .collect(Collectors.toList());
     }
 
-    public byte[] downloadIdeaFile(Long ideaId, Long userId) {
+    public String getIdeaFile(Long ideaId, Long userId) {
         Idea idea = ideaRepository.findById(ideaId)
                 .orElseThrow(() -> new IllegalArgumentException("Idea not found: ID = " + ideaId));
 
@@ -112,9 +113,9 @@ public class IdeaService {
             throw new IllegalArgumentException("User does not have access to this file");
         }
 
-        return s3Service.downloadFile(idea.getFileUrl());
-    }
+        return idea.getFileUrl();
 
+    }
 
 }
 

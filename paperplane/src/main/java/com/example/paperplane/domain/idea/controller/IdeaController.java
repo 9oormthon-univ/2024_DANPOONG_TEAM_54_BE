@@ -73,12 +73,11 @@ public class IdeaController {
 
     @GetMapping("/{id}/download")
     @Operation(summary = "아이디어 파일 다운로드")
-    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id, @RequestParam Long userId) {
-        byte[] fileData = ideaService.downloadIdeaFile(id, userId);
+    public ResponseEntity<String> downloadFile(@PathVariable Long id, @RequestParam Long userId) {
+        String file = ideaService.getIdeaFile(id, userId);
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=idea_file")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(fileData);
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file + "\"")
+                .body(file);
     }
 }
 
