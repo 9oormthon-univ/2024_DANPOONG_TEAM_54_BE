@@ -22,7 +22,7 @@ public class S3Service {
 
     private final AmazonS3 amazonS3;
 
-    @Value("${aws.s3.bucket}")
+    @Value("${S3_BUCKET_NAME:paperplane-s3-bucket}")
     private String bucketName;
 
 
