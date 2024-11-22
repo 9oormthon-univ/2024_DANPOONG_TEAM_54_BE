@@ -34,7 +34,9 @@ public class UserController {
     }
 
     @PostMapping("/kakao")
-    @Operation(summary = "Kakao 사용자 등록 또는 기존 사용자 가져오기")
+    @Operation(summary = "Kakao 사용자 등록 또는 기존 사용자 가져오기", description = "첫 로그인 → isFirstLogin 값 =  true\n" +
+            "\n" +
+            "첫 로그인 이후 → isFirstLogin 값 =  false")
     public ResponseEntity<UserIdResponse> registerOrGetUser(@RequestBody KakaoUserRequest request) {
         UserIdResponse response = userService.registerOrGetUser(request);
         return ResponseEntity.ok(response);

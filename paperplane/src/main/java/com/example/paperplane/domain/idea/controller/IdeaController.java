@@ -9,8 +9,11 @@ import com.example.paperplane.domain.idea.service.IdeaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,27 +32,53 @@ public class IdeaController {
     }
 
     @GetMapping("/category")
-    @Operation(summary = "카테고리별 아이디어 조회")
+    @Operation(summary = "카테고리별 아이디어 조회", description = "카테고리 한글로 입력하면 됩니다.")
     public ResponseEntity<List<IdeaCatalogResponse>> getIdeasByCategory(@RequestParam String category) {
         Category enumCategory = Category.fromDisplayName(category);
         List<IdeaCatalogResponse> ideas = ideaService.getIdeasByCategory(enumCategory);
         return ResponseEntity.ok(ideas);
     }
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "아이디어 작성")
-    public Idea createIdea(@RequestBody IdeaRequest request, @RequestParam Long userId) {
-        System.out.println("Received request: " + request);
-        Category category = Category.fromDisplayName(request.categoryDisplayName()); // 변환
-        return ideaService.createIdea(request, userId, category);
+    public ResponseEntity<Idea> createIdea(
+            @ModelAttribute IdeaRequest request, // 모든 데이터 수신
+            @RequestParam Long userId // 별도의 사용자 ID
+    ) {
+        Category category = Category.fromDisplayName(request.categoryDisplayName());
+        Idea createdIdea = ideaService.createIdea(request, userId, request.file(), category);
+        return ResponseEntity.ok(createdIdea);
     }
 
+
+
     @GetMapping("/{id}")
-    @Operation(summary = "아이디어 상세 조회")
+    @Operation(summary = "아이디어 상세 조회", description = "OWN - 본인 아이디어  PURCHASED - 이미 구매한 아이디어  NOT_PURCHASED - 구매하지 않은 아이디어")
     public IdeaDetailResponse getIdeaDetail(@PathVariable Long id, @RequestParam Long userId) {
 
         return ideaService.getIdeaDetail(id, userId);
     }
 
+    @GetMapping("/user/{username}")
+    @Operation(summary = "특정 사용자의 아이디어 조회")
+    public List<IdeaCatalogResponse> getIdeasByUsername(@PathVariable String username) {
+        return ideaService.getIdeasByUsername(username);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "아이디어 검색", description = "키워드로 아이디어를 검색합니다 (제목 또는 태그 기준).")
+    public List<IdeaCatalogResponse> searchIdeas(@RequestParam String keyword) {
+        return ideaService.searchIdeas(keyword);
+    }
+
+    @GetMapping("/{id}/download")
+    @Operation(summary = "아이디어 파일 다운로드")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable Long id, @RequestParam Long userId) {
+        byte[] fileData = ideaService.downloadIdeaFile(id, userId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=idea_file")
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .body(fileData);
+    }
 }
 

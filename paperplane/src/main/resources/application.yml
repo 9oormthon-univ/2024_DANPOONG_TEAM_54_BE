@@ -9,7 +9,12 @@ spring:
       ddl-auto: update
 #  jackson:
 #    property-naming-strategy: SNAKE_CASE
-
+  servlet:
+    multipart:
+      enabled: true # 멀티파트 업로드 지원여부 (default: true)
+      file-size-threshold: 0B # 파일을 디스크에 저장하지 않고 메모리에 저장하는 최소 크기 (default: 0B)
+      max-file-size: 100MB # 한개 파일의 최대 사이즈 (default: 1MB)
+      max-request-size: 100MB # 한개 요청의 최대 사이즈 (default: 10MB)
 
 kakao:
   client-id: e1ac4ad724cbaae65c5782f85de2b5a7
@@ -20,5 +25,3 @@ kakao:
   client-secret: I1z20yPqRc4GMvYG6mzIqUOXZwR1EyLf
   user-info-uri: https://kapi.kakao.com/v2/user/me
   logout-uri: https://kauth.kakao.com/oauth/logout
-
-
