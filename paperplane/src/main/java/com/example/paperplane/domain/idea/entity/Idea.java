@@ -52,6 +52,9 @@ public class Idea {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column
+    private String fileUrl;
+
     public Idea(User user, String title, Category category, String description, String tags, int price) {
         this.user = user;
         this.title = title;
@@ -60,16 +63,5 @@ public class Idea {
         this.tags = tags;
         this.price = price;
     }
-
-    @Column
-    private String fileUrl;
-
-//    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<Favorite> favorites;
-//
-//    // 좋아요 수 계산
-//    public int getFavoriteCount() {
-//        return favorites.size();
-//    }
 }
 
