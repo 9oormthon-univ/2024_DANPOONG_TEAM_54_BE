@@ -49,8 +49,9 @@ public class Idea {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column
+    @Column(nullable = true)
     private String fileUrl;
+
 
     public Idea(User user, String title, Category category, String description, String tags, int price) {
         this.user = user;
