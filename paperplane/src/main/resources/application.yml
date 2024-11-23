@@ -19,8 +19,8 @@ spring:
       max-request-size: 100MB
 
 aws:
-  access-key: ${AWS_ACCESS_KEY}
-  secret-key: ${AWS_SECRET_KEY}
+  access-key: ${AWS_ACCESS_KEY_ID}
+  secret-key: ${AWS_SECRET_ACCESS_KEY}
   region:
     static: ap-northeast-2
   s3:
