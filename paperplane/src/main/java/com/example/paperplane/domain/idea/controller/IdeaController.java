@@ -8,6 +8,7 @@ import com.example.paperplane.domain.idea.entity.Idea;
 import com.example.paperplane.domain.idea.service.IdeaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -40,75 +41,14 @@ public class IdeaController {
         return ResponseEntity.ok(ideas);
     }
 
-//    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @Operation(summary = "아이디어 작성")
-//    public ResponseEntity<IdeaDetailResponse> createIdea(
-//            @ModelAttribute IdeaRequest request,
-//            @RequestParam Long userId
-//    ) {
-//        Category category = Category.fromDisplayName(request.categoryDisplayName());
-//        Idea savedIdea = ideaService.createIdea(request, userId, request.file(), category);
-//        return ResponseEntity.ok(new IdeaDetailResponse(savedIdea, "OWN"));
-//    }
-
-//    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @Operation(summary = "아이디어 작성")
-//    public ResponseEntity<IdeaDetailResponse> createIdea(
-//            @RequestPart(value = "file", required = false) MultipartFile file, // file은 nullable
-//            @RequestPart("title") String title,
-//            @RequestPart("categoryDisplayName") String categoryDisplayName,
-//            @RequestPart("description") String description,
-//            @RequestPart("tags") String tags,
-//            @RequestPart("price") Integer price,
-//            @RequestParam Long userId
-//    ) {
-//        Category category = Category.fromDisplayName(categoryDisplayName);
-//        IdeaRequest request = new IdeaRequest(title, categoryDisplayName, description, tags, price, file);
-//
-//        Idea savedIdea = ideaService.createIdea(request, userId, file, category);
-//
-//        return ResponseEntity.ok(new IdeaDetailResponse(savedIdea, "OWN"));
-//    }
-
-
-//    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    @Operation(summary = "아이디어 작성")
-//    public ResponseEntity<IdeaDetailResponse> createIdea(
-//            MultipartHttpServletRequest request,
-//            @RequestParam Long userId
-//    ) {
-//        // JSON 데이터 추출
-//        String title = request.getParameter("title");
-//        String categoryDisplayName = request.getParameter("categoryDisplayName");
-//        String description = request.getParameter("description");
-//        String tags = request.getParameter("tags");
-//        Integer price = Integer.parseInt(request.getParameter("price")); // Ensure this is present in the request
-//
-//        // Category 변환
-//        Category category = Category.fromDisplayName(categoryDisplayName);
-//
-//        // 파일 처리
-//        MultipartFile file = request.getFile("file");
-//
-//        // IdeaRequest와 동일한 데이터 생성
-//        IdeaRequest ideaRequest = new IdeaRequest(title, categoryDisplayName, description, tags, price, file);
-//
-//        // 서비스 호출
-//        Idea savedIdea = ideaService.createIdea(ideaRequest, userId, file, category);
-//
-//        return ResponseEntity.ok(new IdeaDetailResponse(savedIdea, "OWN"));
-//    }
-
-
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "아이디어 작성")
     public ResponseEntity<IdeaDetailResponse> createIdea(
-            @RequestPart("request") IdeaRequest request,
-            @RequestPart(value = "file", required = false) MultipartFile file,
+            @ModelAttribute @Valid IdeaRequest request,
             @RequestParam Long userId
     ) {
         Category category = Category.fromDisplayName(request.categoryDisplayName());
-        Idea savedIdea = ideaService.createIdea(request, userId, file, category);
+        Idea savedIdea = ideaService.createIdea(request, userId, request.file(), category);
         return ResponseEntity.ok(new IdeaDetailResponse(savedIdea, "OWN"));
     }
 

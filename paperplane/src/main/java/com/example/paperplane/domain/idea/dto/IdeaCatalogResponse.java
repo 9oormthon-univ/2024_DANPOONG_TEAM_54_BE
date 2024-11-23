@@ -6,7 +6,7 @@ import com.example.paperplane.domain.idea.entity.Idea;
 import java.time.LocalDateTime;
 
 public record IdeaCatalogResponse(
-        Long id,
+        Long ideaId,
         String title,
         Category category,
         LocalDateTime createdAt,
