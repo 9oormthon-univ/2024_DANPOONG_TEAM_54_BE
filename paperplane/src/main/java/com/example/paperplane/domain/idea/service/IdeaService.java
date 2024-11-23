@@ -49,6 +49,7 @@ public class IdeaService {
     }
 
     public Idea createIdea(IdeaRequest request, Long userId, MultipartFile file, Category category) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
         Idea idea = new Idea(
@@ -63,6 +64,8 @@ public class IdeaService {
         if (file != null && !file.isEmpty()) {
             String fileUrl = s3Service.uploadFile(file);
             idea.setFileUrl(fileUrl);
+        } else {
+            idea.setFileUrl(null);
         }
         return ideaRepository.save(idea);
     }
@@ -95,7 +98,6 @@ public class IdeaService {
                 idea.getUser().getUsername(),
                 idea.getCreatedAt(),
                 status
-
         );
     }
 
