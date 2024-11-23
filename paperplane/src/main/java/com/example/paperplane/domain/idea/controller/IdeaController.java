@@ -89,11 +89,17 @@ public class IdeaController {
         return ResponseEntity.ok(id);
     }
 
-    @PatchMapping("/{id}")
-    @Operation(summary = "아이디어 수정")
-    public void updateIdea(@PathVariable Long id, @RequestParam Long userId, @ModelAttribute IdeaRequest request) {
-        Category category = Category.fromDisplayName(request.categoryDisplayName());
-        ideaService.updateIdea(id, userId, request);
+    @PatchMapping(value = "/update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "아이디어 부분 업데이트")
+    public ResponseEntity<IdeaDetailResponse> updateIdea(
+            @RequestParam Long ideaId,
+            @RequestParam Long userId,
+            @ModelAttribute @Valid IdeaRequest request
+    ) {
+
+        Idea updatedIdea = ideaService.updateIdea(ideaId, userId, request, request.file());
+        return ResponseEntity.ok(new IdeaDetailResponse(updatedIdea, "OWN"));
     }
+
 }
 

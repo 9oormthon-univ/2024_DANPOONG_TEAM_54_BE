@@ -131,16 +131,36 @@ public class IdeaService {
         ideaRepository.delete(idea);
     }
 
-    public void updateIdea(Long ideaId, Long userId, IdeaRequest request) {
+    public Idea updateIdea(Long ideaId, Long userId, IdeaRequest request, MultipartFile file) {
+
         Idea idea = ideaRepository.findById(ideaId)
                 .orElseThrow(() -> new IllegalArgumentException("Idea not found: ID = " + ideaId));
+
 
         if (!idea.getUser().getUserId().equals(userId)) {
             throw new IllegalArgumentException("User does not have access to this idea");
         }
 
-        idea.update(request.title(), request.description(), request.tags(), request.price(), Category.fromDisplayName(request.categoryDisplayName()));
+        idea.update(request.title(),
+                request.description(),
+                request.tags(),
+                request.price(),
+                Category.fromDisplayName(request.categoryDisplayName()));
+
+        if (file != null && !file.isEmpty()) {
+
+            String fileUrl = s3Service.uploadFile(file);
+            idea.setFileUrl(fileUrl);
+        } else if (request.file() == null) {
+
+            idea.setFileUrl(null);
+        }
+
+
+        ideaRepository.save(idea);
+        return idea;
     }
+
 
 }
 
