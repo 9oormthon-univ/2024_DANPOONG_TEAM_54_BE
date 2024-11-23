@@ -22,9 +22,6 @@ public class S3Config {
     @Value("${aws.secret-key}")
     private String secretKey;
 
-//    String accessKey = System.getenv("AWS_ACCESS_KEY_ID");
-//    String secretKey = System.getenv("AWS_SECRET_ACCESS_KEY");
-
     @Bean
     public AmazonS3 amazonS3Client() {
         return AmazonS3ClientBuilder.standard()

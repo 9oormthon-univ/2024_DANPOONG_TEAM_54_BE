@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: application-secret.yml
   datasource:
     url: jdbc:mysql://paperplane-db.cz2y8guyqpbh.ap-northeast-2.rds.amazonaws.com:3306/paperplane_db
     username: admin
@@ -16,21 +18,10 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
 
-kakao:
-  client-id: e1ac4ad724cbaae65c5782f85de2b5a7
-  redirect-uri: http://54.180.136.222:8080/login-callback
-  authorize-uri: https://kauth.kakao.com/oauth/authorize
-  token-uri: https://kauth.kakao.com/oauth/token
-  kakao-api-host: https://kapi.kakao.com
-  client-secret: I1z20yPqRc4GMvYG6mzIqUOXZwR1EyLf
-  user-info-uri: https://kapi.kakao.com/v2/user/me
-  logout-uri: https://kauth.kakao.com/oauth/logout
-
 aws:
-  access-key: AKIAVRUVSGSDZVMI2WF5
-  secret-key: 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
+  access-key: ${AWS_ACCESS_KEY}
+  secret-key: ${AWS_SECRET_KEY}
   region:
     static: ap-northeast-2
   s3:
     bucket: paperplane-s3-bucket
-

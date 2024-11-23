@@ -41,6 +41,5 @@ public class User {
 
     private boolean firstLogin;
 
-
 }
 
