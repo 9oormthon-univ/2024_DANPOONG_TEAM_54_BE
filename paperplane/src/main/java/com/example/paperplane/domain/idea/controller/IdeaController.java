@@ -41,13 +41,13 @@ public class IdeaController {
 
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "아이디어 작성")
-    public ResponseEntity<Idea> createIdea(
+    public ResponseEntity<IdeaDetailResponse> createIdea(
             @ModelAttribute IdeaRequest request,
             @RequestParam Long userId
     ) {
         Category category = Category.fromDisplayName(request.categoryDisplayName());
-        Idea createdIdea = ideaService.createIdea(request, userId, request.file(), category);
-        return ResponseEntity.ok(createdIdea);
+        Idea savedIdea = ideaService.createIdea(request, userId, request.file(), category);
+        return ResponseEntity.ok(new IdeaDetailResponse(savedIdea, "OWN"));
     }
 
 
