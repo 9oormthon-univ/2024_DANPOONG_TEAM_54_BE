@@ -1,6 +1,7 @@
 package com.example.paperplane.domain.idea.dto;
 
 import com.example.paperplane.domain.idea.entity.Category;
+import jakarta.annotation.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 public record IdeaRequest(
@@ -8,7 +9,7 @@ public record IdeaRequest(
         String categoryDisplayName,
         String description,
         String tags,
-        int price,
-        MultipartFile file
+        Integer price,
+        @Nullable MultipartFile file
 ) {
 }

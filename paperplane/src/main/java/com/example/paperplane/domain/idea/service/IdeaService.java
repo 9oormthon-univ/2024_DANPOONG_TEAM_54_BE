@@ -76,7 +76,7 @@ public class IdeaService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다: ID = " + userId));
 
         String status;
-        String fileDownloadUrl = null;
+
         if (idea.getUser().getUserId().equals(userId)) {
             status = "OWN"; // 본인 아이디어
         } else if (purchaseRepository.existsByUser_UserIdAndIdea_IdeaId(userId, id)) {
@@ -95,6 +95,7 @@ public class IdeaService {
                 idea.getUser().getUsername(),
                 idea.getCreatedAt(),
                 status
+
         );
     }
 
@@ -115,6 +116,28 @@ public class IdeaService {
 
         return idea.getFileUrl();
 
+    }
+
+    public void deleteIdea(Long ideaId, Long userId) {
+        Idea idea = ideaRepository.findById(ideaId)
+                .orElseThrow(() -> new IllegalArgumentException("Idea not found: ID = " + ideaId));
+
+        if (!idea.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("User does not have access to this idea");
+        }
+
+        ideaRepository.delete(idea);
+    }
+
+    public void updateIdea(Long ideaId, Long userId, IdeaRequest request) {
+        Idea idea = ideaRepository.findById(ideaId)
+                .orElseThrow(() -> new IllegalArgumentException("Idea not found: ID = " + ideaId));
+
+        if (!idea.getUser().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("User does not have access to this idea");
+        }
+
+        idea.update(request.title(), request.description(), request.tags(), request.price());
     }
 
 }
