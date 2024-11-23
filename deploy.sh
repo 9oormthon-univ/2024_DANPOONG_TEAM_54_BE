@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source .bashrc
+
 IS_GREEN=$(docker ps | grep app-green)
 
 if [ -z "$IS_GREEN" ]; then
