@@ -9,7 +9,6 @@ public record IdeaRequest(
         String categoryDisplayName,
         String description,
         String tags,
-        Integer price,
-        @Nullable MultipartFile file
+        Integer price
 ) {
 }
