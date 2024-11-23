@@ -5,6 +5,7 @@ public enum Category {
     IT_TREND("IT/트렌드"),
     JOB_ACTIVITY("대외활동"),
     DESIGN_TEMPLATE("디자인"),
+    LIFE("생활"),
     OTHERS("기타");
 
     private final String displayName;
