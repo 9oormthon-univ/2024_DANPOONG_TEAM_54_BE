@@ -29,7 +29,7 @@ public class UserService {
     public UserProfileResponse getUserProfile(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found: ID = " + userId));
-        return new UserProfileResponse(user.getUsername(), user.getProfileImage(), user.getPoints());
+        return new UserProfileResponse(user.getUsername(), user.getProfileImage(), user.getPoints(), user.getUserId());
     }
 
     public UserIdResponse registerOrGetUser(KakaoUserRequest request) {

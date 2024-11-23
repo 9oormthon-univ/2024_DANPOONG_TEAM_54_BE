@@ -139,7 +139,7 @@ public class IdeaService {
             throw new IllegalArgumentException("User does not have access to this idea");
         }
 
-        idea.update(request.title(), request.description(), request.tags(), request.price());
+        idea.update(request.title(), request.description(), request.tags(), request.price(), Category.fromDisplayName(request.categoryDisplayName()));
     }
 
 }

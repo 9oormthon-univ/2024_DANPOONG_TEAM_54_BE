@@ -62,11 +62,12 @@ public class Idea {
         this.price = price;
     }
 
-    public void update(String title, String description, String tags, int price) {
+    public void update(String title, String description, String tags, int price, Category category) {
         this.title = title;
         this.description = description;
         this.tags = tags;
         this.price = price;
+        this.category = category;
     }
 }
 
