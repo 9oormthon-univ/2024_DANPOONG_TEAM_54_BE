@@ -79,5 +79,19 @@ public class IdeaController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file + "\"")
                 .body(file);
     }
+
+    @DeleteMapping("/{id}")
+    @Operation(summary = "아이디어 삭제")
+    public ResponseEntity<Long> deleteIdea(@PathVariable Long id, @RequestParam Long userId) {
+        ideaService.deleteIdea(id, userId);
+        return ResponseEntity.ok(id);
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "아이디어 수정")
+    public void updateIdea(@PathVariable Long id, @RequestParam Long userId, @ModelAttribute IdeaRequest request) {
+        Category category = Category.fromDisplayName(request.categoryDisplayName());
+        ideaService.updateIdea(id, userId, request);
+    }
 }
 
