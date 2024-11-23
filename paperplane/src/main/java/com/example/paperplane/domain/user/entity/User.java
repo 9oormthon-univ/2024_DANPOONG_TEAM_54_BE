@@ -28,7 +28,7 @@ public class User {
     private String profileImage;
 
     @Column(nullable = false)
-    private int points = 5000;
+    private int points = 0;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
