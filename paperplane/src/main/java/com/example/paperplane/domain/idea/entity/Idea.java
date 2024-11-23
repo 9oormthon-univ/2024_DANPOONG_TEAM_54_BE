@@ -43,9 +43,6 @@ public class Idea {
     @Column
     private String tags;
 
-    @Column
-    private int views = 0;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 
