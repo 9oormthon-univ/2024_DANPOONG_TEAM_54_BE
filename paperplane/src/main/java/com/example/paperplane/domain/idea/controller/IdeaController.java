@@ -42,8 +42,8 @@ public class IdeaController {
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "아이디어 작성")
     public ResponseEntity<Idea> createIdea(
-            @ModelAttribute IdeaRequest request, // 모든 데이터 수신
-            @RequestParam Long userId // 별도의 사용자 ID
+            @ModelAttribute IdeaRequest request,
+            @RequestParam Long userId
     ) {
         Category category = Category.fromDisplayName(request.categoryDisplayName());
         Idea createdIdea = ideaService.createIdea(request, userId, request.file(), category);
