@@ -6,7 +6,9 @@ public enum Category {
     JOB_ACTIVITY("대외활동"),
     DESIGN_TEMPLATE("디자인"),
     LIFE("생활"),
+    TEST("시험/과제"),
     OTHERS("기타");
+
 
     private final String displayName;
 
