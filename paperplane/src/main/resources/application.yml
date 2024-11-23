@@ -19,9 +19,10 @@ spring:
       max-request-size: 100MB
 
 aws:
-  access-key: ${AWS_ACCESS_KEY_ID}
-  secret-key: ${AWS_SECRET_ACCESS_KEY}
+  access-key: AKIAVRUVSGSDZVMI2WF5
+  secret-key: 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
   region:
     static: ap-northeast-2
   s3:
     bucket: paperplane-s3-bucket
+
